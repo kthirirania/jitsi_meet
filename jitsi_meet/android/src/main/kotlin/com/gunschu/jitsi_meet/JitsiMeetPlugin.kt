@@ -63,9 +63,11 @@ public class JitsiMeetPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware
     companion object {
         @JvmStatic
         fun registerWith(registrar: Registrar) {
-            val plugin = JitsiMeetPlugin(registrar.activity())
-            val channel = MethodChannel(registrar.messenger(), JITSI_METHOD_CHANNEL)
-            channel.setMethodCallHandler(plugin)
+            registrar.activity()?.let {
+                val plugin = JitsiMeetPlugin(it)
+                val channel = MethodChannel(registrar.messenger(), JITSI_METHOD_CHANNEL)
+                channel.setMethodCallHandler(plugin)
+            }
 
 
             val eventChannel = EventChannel(registrar.messenger(), JITSI_EVENT_CHANNEL)
@@ -102,9 +104,11 @@ public class JitsiMeetPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware
     private fun joinMeeting(call: MethodCall, result: Result) {
         val room = call.argument<String>("room")
         if (room.isNullOrBlank()) {
-            result.error("400",
-                    "room can not be null or empty",
-                    "room can not be null or empty")
+            result.error(
+                "400",
+                "room can not be null or empty",
+                "room can not be null or empty"
+            )
             return
         }
 
@@ -128,14 +132,14 @@ public class JitsiMeetPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware
 
         // Set meeting options
         optionsBuilder
-                .setServerURL(serverURL)
-                .setRoom(room)
-                .setSubject(call.argument("subject"))
-                .setToken(call.argument("token"))
-                .setAudioMuted(call.argument("audioMuted") ?: false)
-                .setAudioOnly(call.argument("audioOnly") ?: false)
-                .setVideoMuted(call.argument("videoMuted") ?: false)
-                .setUserInfo(userInfo)
+            .setServerURL(serverURL)
+            .setRoom(room)
+            .setSubject(call.argument("subject"))
+            .setToken(call.argument("token"))
+            .setAudioMuted(call.argument("audioMuted") ?: false)
+            .setAudioOnly(call.argument("audioOnly") ?: false)
+            .setVideoMuted(call.argument("videoMuted") ?: false)
+            .setUserInfo(userInfo)
 
         // Add feature flags into options, reading given Map
         if (call.argument<HashMap<String, Any>?>("featureFlags") != null) {

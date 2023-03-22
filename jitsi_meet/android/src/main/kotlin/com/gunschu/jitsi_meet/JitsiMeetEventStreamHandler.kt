@@ -45,17 +45,15 @@ class JitsiMeetEventStreamHandler private constructor(): EventChannel.StreamHand
 
     fun onPictureInPictureWillEnter() {
         Log.d(JITSI_PLUGIN_TAG, "JitsiMeetEventStreamHandler.onPictureInPictureWillEnter")
-        var data : HashMap<String, String>
-                = HashMap<String, String> ()
-        data?.put("event", "onPictureInPictureWillEnter")
+        val data = HashMap<String, String> ()
+        data["event"] = "onPictureInPictureWillEnter"
         eventSink?.success(data)
     }
 
     fun onPictureInPictureTerminated() {
         Log.d(JITSI_PLUGIN_TAG, "JitsiMeetEventStreamHandler.onPictureInPictureTerminated")
-        var data : HashMap<String, String>
-                = HashMap<String, String> ()
-        data?.put("event", "onPictureInPictureTerminated")
+        val data = HashMap<String, String> ()
+        data["event"] = "onPictureInPictureTerminated"
         eventSink?.success(data)
     }
 
