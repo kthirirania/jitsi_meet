@@ -23,7 +23,7 @@ class JitsiMeetPluginActivity : JitsiMeetActivity() {
         @JvmStatic
         fun launchActivity(context: Context?,
                            options: JitsiMeetConferenceOptions) {
-            var intent = Intent(context, JitsiMeetPluginActivity::class.java).apply {
+            val intent = Intent(context, JitsiMeetPluginActivity::class.java).apply {
                 action = "org.jitsi.meet.CONFERENCE"
                 putExtra("JitsiMeetConferenceOptions", options)
             }
@@ -31,7 +31,7 @@ class JitsiMeetPluginActivity : JitsiMeetActivity() {
         }
     }
 
-    var onStopCalled: Boolean = false;
+    private var onStopCalled: Boolean = false;
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
@@ -43,15 +43,15 @@ class JitsiMeetPluginActivity : JitsiMeetActivity() {
             JitsiMeetEventStreamHandler.instance.onPictureInPictureTerminated()
         }
 
-        if (isInPictureInPictureMode == false && onStopCalled) {
+        if (!isInPictureInPictureMode && onStopCalled) {
             // Picture-in-Picture mode has been closed, we can (should !) end the call
-            getJitsiView().leave()
+            jitsiView.leave()
         }
     }
 
     private val myReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            when (intent?.action) {
+            when (intent.action) {
                 JITSI_MEETING_CLOSE -> finish()
             }
         }
@@ -106,7 +106,7 @@ class JitsiMeetPluginActivity : JitsiMeetActivity() {
 
             // If you want to display the keyguard to prompt the user to unlock the phone:
             val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-            keyguardManager?.requestDismissKeyguard(this, null)
+            keyguardManager.requestDismissKeyguard(this, null)
         } else {
             // For older versions, do it as you did before.
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
